@@ -6,6 +6,28 @@ v7 Breaking Changes Summary
 
 .. towncrier release notes start
 
+web3.py v8.0.0-beta.3 (2026-04-30)
+----------------------------------
+
+Breaking Changes
+~~~~~~~~~~~~~~~~
+
+- The ``ens.exceptions.UnsupportedFunction`` exception has been removed. Resolver lookups that previously raised ``UnsupportedFunction`` (for example, calling ``get_text`` against a resolver that does not implement ``text``) now raise ``ResolverNotFound`` instead, since the Universal Resolver collapses both "no resolver found" and "resolver does not support function" into a single revert. Update any ``except UnsupportedFunction`` handlers to catch ``ResolverNotFound``. (`#3822 <https://github.com/ethereum/web3.py/issues/3822>`__)
+
+
+Bugfixes
+~~~~~~~~
+
+- Fixed ``ens.utils.is_none_or_zero_address`` not detecting bytes-form zero addresses (``b"\x00" * 20``) — the function compared against the hex string ``EMPTY_ADDR_HEX`` only, even though its signature accepts ``Address`` (which is ``bytes``). This caused ``ens.address(name, coin_type=N)`` to return the zero-address checksum string instead of ``None`` when the resolver recorded a zero address. (`#3822 <https://github.com/ethereum/web3.py/issues/3822>`__)
+- Fix a bug where request caching was not properly working for persistent connection providers (``WebSocketProvider`` and ``AsyncIPCProvider``). (`#3825 <https://github.com/ethereum/web3.py/issues/3825>`__)
+
+
+Features
+~~~~~~~~
+
+- ENS read operations now use the Universal Resolver (``0xeEeEEEeE14D718C2B47D9923Deab1335E144EeEe``) instead of querying the ENS Registry directly, aligning with ENSv2 readiness requirements. (`#3822 <https://github.com/ethereum/web3.py/issues/3822>`__)
+
+
 web3.py v8.0.0-beta.2 (2026-04-02)
 ----------------------------------
 
